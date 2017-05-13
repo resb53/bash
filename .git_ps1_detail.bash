@@ -1,4 +1,11 @@
-source /usr/share/git-core/contrib/completion/git-prompt.sh
+# Get git-prompt source if not already included
+# CentOS/Fedora
+if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]; then
+  source /usr/share/git-core/contrib/completion/git-prompt.sh
+# Mint/Ubuntu/Debian
+elif [ -f /etc/bash_completion.d/git-prompt ]; then
+  source /etc/bash_completion.d/git-prompt 
+fi
 
 function __git_ps1_detail() {
 
