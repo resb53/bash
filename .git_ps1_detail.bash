@@ -20,15 +20,30 @@ function __git_ps1_detail() {
     # Any uncommitted changes
     UNCOM=$(echo "$STATUS" | grep -e "^[MADRCU?] " 2> /dev/null | wc -l)
     # Total tracked files
-    TRACK=$(git ls-files | wc -l)
+    TRACK=$(git ls-tree -r $(__git_ps1 "%s") 2> /dev/null | wc -l)
+    # If new repo, no committed/tracked files
+    if [ "$?" -ne 0 ]; then
+      TRACK=0
+    fi
     
+    # Get remote repo name
+    REPO=$(git remote -v | grep -m1 origin | grep -oe "[^\/]*\.git" | cut -d"." -f"1")
+    # Get local dir name for this git repo if no remote
+    if [ -z $REPO ]; then
+      REPO=$(__gitdir | grep -oP "[^\/]+\/\.git$" | cut -d"/" -f"1")
+    fi
+    # Get current dir as above will fail if response is '.git'
+    if [ -z $REPO ]; then
+      REPO=$(pwd | grep -oe "[^\/]*$")
+    fi
+
     # Provides the branch name and 4 colon separated numbers.
     # Changes propagate from left to right as follows:
     # Red:    New files that aren't tracked.
     # Orange: Tracked files that have uncommitted changes.
     # Yellow: Files staged for committing.
     # Green:  Total tracked files in the repo.
-    BRANCH_STRING+=$'\033[0;32m'$(__git_ps1 " [%s:")$'\033[0;31m'${UNTRK}$'\033[0;32m':$'\033[0;33m'${CHNGE}$'\033[0;32m':$'\033[0;93m'${UNCOM}$'\033[0;32m':$'\033[0;92m'${TRACK}$'\033[0;32m]'$'\033[0m'
+    BRANCH_STRING+=$'\033[0;32m'$(__git_ps1 " [$REPO/%s:")$'\033[0;31m'${UNTRK}$'\033[0;32m':$'\033[0;33m'${CHNGE}$'\033[0;32m':$'\033[0;93m'${UNCOM}$'\033[0;32m':$'\033[0;92m'${TRACK}$'\033[0;32m]'$'\033[0m'
 
   else
     # Not a git repo or git not installed
