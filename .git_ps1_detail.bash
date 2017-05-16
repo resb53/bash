@@ -20,7 +20,7 @@ function __git_ps1_detail() {
     # Any uncommitted changes
     UNCOM=$(echo "$STATUS" | grep -e "^[MADRCU?] " 2> /dev/null | wc -l)
     # Total tracked files
-    TRACK=$(git ls-tree -r $(__git_ps1 "%s") 2> /dev/null | wc -l)
+    TRACK=`(cd $(__gitdir); cd ../; git ls-tree -r $(__git_ps1 "%s")) 2> /dev/null | wc -l`
     # If new repo, no committed/tracked files
     if [ "$?" -ne 0 ]; then
       TRACK=0
