@@ -11,6 +11,7 @@ umask 0002
 
 # Git prompt details
 source ~/.git_ps1_detail.bash
+source ~/.git_completion.bash
 
 # Set prompt to dynamic update
 export PROMPT_COMMAND="echo -ne \"\033]0;${USER}@$(hostname | cut -d'.' -f'1') -- $(ddate +'%{%A, the %e day of %B%}, %Y.%N Celebrate %H')\007\""
