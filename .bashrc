@@ -24,6 +24,7 @@ export HISTFILESIZE=10000
 export CHARSET="utf8"
 export LANG="en_GB.UTF-8"
 export TZ="UTC"
+export SSH_ASKPASS="/usr/bin/ksshaskpass"
 
 # Set Go vars
 export GOPATH=$HOME/go
