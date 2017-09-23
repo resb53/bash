@@ -7,20 +7,49 @@ elif [ -f /etc/bash_completion.d/git-prompt ]; then
   source /etc/bash_completion.d/git-prompt 
 fi
 
+# Global prompt colours
+cDEF=$'\e[0;32m' #dark green
+cNONE=$'\e[0m'   #default
+
+# Colour prompt strings (ARG1:String, ARG2:Colour)
+function colourify() {
+  local cRED=$'\e[0;31m'
+  local cORANGE=$'\e[0;33m'
+  local cYELLOW=$'\e[0;93m'
+  local cGREEN=$'\e[0;92m'
+
+  case $2 in
+    red)
+      echo $cRED$1$cDEF
+      ;;
+    orange)
+      echo $cORANGE$1$cDEF
+      ;;
+    yellow)
+      echo $cYELLOW$1$cDEF
+      ;;
+    green)
+      echo $cGREEN$1$cDEF
+      ;;
+  esac
+}
+
 function __git_ps1_detail() {
 
-  BRANCH_STRING=''
-  STATUS=$(git status -s 2> /dev/null)
-  
+  local BRANCH_STRING=$cDEF
+  local GIT_ROOT=$(__gitdir)/..
+  local GIT_BRANCH=$(__git_ps1 "%s")
+
+  STATUS=$(git status -su 2> /dev/null)
   if [ "$?" -eq 0 ]; then
     # Any untracked changes to files
-    UNTRK=$(echo $STATUS | grep -e "^??" 2> /dev/null | wc -l)
+    UNTRK=$(echo "$STATUS" | grep -e "^??" 2> /dev/null | wc -l)
     # Any changes to tracked files
     CHNGE=$(echo "$STATUS" | grep -e "^[MADRCU? ][MD]" 2> /dev/null | wc -l)
     # Any uncommitted changes
     UNCOM=$(echo "$STATUS" | grep -e "^[MADRCU?] " 2> /dev/null | wc -l)
     # Total tracked files
-    TRACK=`(cd $(__gitdir); cd ../; git ls-tree -r $(__git_ps1 "%s")) 2> /dev/null | wc -l`
+    TRACK=`(cd $GIT_ROOT; git ls-tree -r $GIT_BRANCH 2> /dev/null | wc -l)`
     # If new repo, no committed/tracked files
     if [ "$?" -ne 0 ]; then
       TRACK=0
@@ -30,11 +59,7 @@ function __git_ps1_detail() {
     REPO=$(git remote -v | grep -m1 origin | grep -oe "[^\/]*\.git" | cut -d"." -f"1")
     # Get local dir name for this git repo if no remote
     if [ -z $REPO ]; then
-      REPO=$(__gitdir | grep -oP "[^\/]+\/\.git$" | cut -d"/" -f"1")
-    fi
-    # Get current dir as above will fail if response is '.git'
-    if [ -z $REPO ]; then
-      REPO=$(pwd | grep -oe "[^\/]*$")
+      REPO=`(cd $GIT_ROOT; pwd | grep -oe "[^\/]*$")`
     fi
 
     # Provides the branch name and 4 colon separated numbers.
@@ -43,13 +68,11 @@ function __git_ps1_detail() {
     # Orange: Tracked files that have uncommitted changes.
     # Yellow: Files staged for committing.
     # Green:  Total tracked files in the repo.
-    BRANCH_STRING+=$'\033[0;32m'$(__git_ps1 " [$REPO/%s:")$'\033[0;31m'${UNTRK}$'\033[0;32m':$'\033[0;33m'${CHNGE}$'\033[0;32m':$'\033[0;93m'${UNCOM}$'\033[0;32m':$'\033[0;92m'${TRACK}$'\033[0;32m]'$'\033[0m'
-
-  else
-    # Not a git repo or git not installed
-    BRANCH_STRING+=$'\033[0m'
+    BRANCH_STRING+=" [$REPO/$GIT_BRANCH:"$(colourify $UNTRK 'red'):$(colourify $CHNGE 'orange'):$(colourify $UNCOM 'yellow'):$(colourify $TRACK 'green')"]"
   fi
 
-  echo ${BRANCH_STRING}
+  BRANCH_STRING+=$cNONE
+
+  echo $BRANCH_STRING
 
 }

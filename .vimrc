@@ -1,5 +1,5 @@
+colo pablo
 syntax on
-colorscheme eldar
 filetype plugin indent on
 set expandtab
 set autoindent

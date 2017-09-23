@@ -41,3 +41,6 @@ alias grep="grep --color=auto"
 alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 alias hex="/usr/bin/od -A x -t x1z -v"
+
+# Set helpful Docker aliases
+alias dockerclean="docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm"
