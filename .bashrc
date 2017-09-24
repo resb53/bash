@@ -44,4 +44,4 @@ alias hex="/usr/bin/od -A x -t x1z -v"
 
 # Set helpful Docker aliases
 alias dockerclean="docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm"
-alias dockerclear="docker rmi $(docker images | grep '^<none>' | awk '{print $3}')"
+alias dockerclear='docker rmi $(docker images | grep "^<none>" | awk '\''{print $3}'\'')'
