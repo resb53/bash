@@ -46,6 +46,9 @@ alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 alias hex="/usr/bin/od -A x -t x1z -v"
 
-# Set helpful Docker aliases
-alias dockerclean="docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm"
-alias dockerclear='docker rmi $(docker images | grep "^<none>" | awk '\''{print $3}'\'')'
+# Set helpful container parameters
+alias dockerclean="docker ps -a | grep Exit | awk '{print \$1}' | xargs docker rm"
+alias dockerclear="docker images | grep '^<none>' | awk '{print \$3}' | xargs docker rmi"
+export CONTAINER_RUNTIME_ENDPOINT=unix:///var/run/crio/crio.sock
+alias criclean="sudo crictl ps -a | grep Exit | awk '{print \$1}' | xargs sudo crictl rm"
+alias criclear="sudo crictl images | grep '^<none>' | awk '{print \$3}' | xargs sudo crictl rmi"
