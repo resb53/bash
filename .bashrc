@@ -31,18 +31,19 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 
-  if [ $COMPLETION ] && [ -x "$(command -v kubectl)" ]; then
-    source <(kubectl completion bash)
+  if [ $COMPLETION ]; then
+    if [ -x "$(command -v kubectl)" ]; then
+      source <(kubectl completion bash)
+    fi
+
+    # Git prompt details
+    source ~/.git_ps1_detail.bash
   fi
 fi
 
 # Set user and mask
 USER=$(whoami)
 umask 0002
-
-# Git prompt details
-source ~/.git_ps1_detail.bash
-source ~/.git_completion.bash
 
 # Set prompt to dynamic update
 export PROMPT_COMMAND='echo -ne "\033]0;${USER}@$(hostname | cut -d"." -f"1")$(if $(ddate > /dev/null 2> /dev/null); then echo " -- $(ddate +"%{%A, the %e day of %B%}, %Y.%N Celebrate %H")"; fi)\007"'
