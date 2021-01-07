@@ -5,10 +5,18 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-if [ -f /usr/share/bash-completion/bash_completion ]; then
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    COMPLETION=1
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
+    COMPLETION=1
     . /etc/bash_completion
+  fi
+
+  if [ $COMPLETION ] && [ -x "$(command -v kubectl)" ]; then
+    source <(kubectl completion bash)
+  fi
 fi
 
 # Set user and mask
