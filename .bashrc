@@ -35,8 +35,8 @@ if ! shopt -oq posix; then
     if [ -x "$(command -v kubectl)" ]; then
       source <(kubectl completion bash)
     fi
-
-    # Git prompt details
+    # Git prompt details after forcing load of git autocompletion
+    source /usr/share/bash-completion/completions/git
     source ~/.git_ps1_detail.bash
   fi
 fi
