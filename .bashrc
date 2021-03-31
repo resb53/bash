@@ -70,9 +70,9 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
 # User specific aliases
-alias cp="cp -i"
-alias mv="mv -i"
-alias rm="rm -i"
+# alias cp="cp -i"
+# alias mv="mv -i"
+# alias rm="rm -i"
 alias ll="ls -lahF"
 alias la="ls -A"
 alias hex="/usr/bin/od -A x -t x1z -v"
