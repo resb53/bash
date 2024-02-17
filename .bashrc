@@ -76,6 +76,7 @@ export PATH=$PATH:$GOPATH/bin
 alias ll="ls -lahF"
 alias la="ls -A"
 alias hex="/usr/bin/od -A x -t x1z -v"
+alias k="kubectl"
 
 # Enable Colour Support
 if [ -x /usr/bin/dircolors ]; then
